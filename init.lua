@@ -1,7 +1,7 @@
 -- init.lua
 
 -- Ustawienie globalnego lidera (musi być przed pierwszym użyciem <leader>)
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
 vim.g.maplocalleader = ' '
 
 -- Instalacja i konfiguracja lazy.nvim
