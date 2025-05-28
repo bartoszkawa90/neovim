@@ -1,0 +1,246 @@
+# Neovim Commands and Tips (Lua-based Configuration)
+
+# --- Basic Neovim Commands ---
+
+# 1. Modes:
+#    - Normal Mode: Default mode for navigation and commands.
+#    - Insert Mode: For typing text (enter with 'i', 'a', 'o'). Exit with 'Esc'.
+#    - Visual Mode: For selecting text (enter with 'v', 'V', 'Ctrl+v').
+#    - Command-line Mode: For executing commands (enter with ':').
+
+# 2. Saving and Exiting:
+:w              # Save the current file
+:q              # Quit Neovim (only if no unsaved changes)
+:wq             # Save and quit
+:x              # Save only if changes were made, then quit
+:q!             # Quit without saving changes (force quit)
+ZZ              # (Normal Mode) Save and quit (same as :wq)
+ZQ              # (Normal Mode) Quit without saving (same as :q!)
+
+# 3. Opening Files:
+:e <filename>   # Open a file in the current window
+:sp <filename>  # Open a file in a new horizontal split
+:vsp <filename> # Open a file in a new vertical split
+:tabnew <filename> # Open a file in a new tab
+
+# 4. Navigation:
+h               # Move cursor left
+j               # Move cursor down
+k               # Move cursor up
+l               # Move cursor right
+w               # Move forward by a word
+b               # Move backward by a word
+e               # Move to the end of a word
+0               # Move to the beginning of the current line
+$               # Move to the end of the current line
+^               # Move to the first non-blank character of the line
+gg              # Move to the beginning of the file
+G               # Move to the end of the file
+<N>gg or <N>G   # Go to line number <N> (e.g., 50gg)
+Ctrl+f          # Scroll down one page
+Ctrl+b          # Scroll up one page
+Ctrl+d          # Scroll down half a page
+Ctrl+u          # Scroll up half a page
+%               # Jump to matching parenthesis/bracket/brace
+
+# 5. Editing and Manipulation:
+i               # Enter Insert Mode before cursor
+a               # Enter Insert Mode after cursor
+o               # Enter Insert Mode on a new line below
+O               # Enter Insert Mode on a new line above
+x               # Delete character under cursor
+dd              # Delete current line
+<N>dd           # Delete <N> lines (e.g., 5dd to delete 5 lines)
+dw              # Delete word from cursor to end of word
+diw             # Delete inner word (deletes word under cursor without trailing space)
+yy              # Yank (copy) current line
+<N>yy           # Yank <N> lines
+yw              # Yank word
+p               # Put (paste) after cursor/line
+P               # Put (paste) before cursor/line
+u               # Undo last change
+Ctrl+r          # Redo undone change
+.               # Repeat last change
+J               # Join current and next line
+r<char>         # Replace character under cursor with <char>
+R               # Enter Replace Mode (overwrites characters)
+~               # Change case of character under cursor
+>>              # Indent line right
+<<              # Indent line left
+cc              # Change current line (deletes line and enters insert mode)
+cw              # Change word (deletes word and enters insert mode)
+
+# 6. Searching:
+/<pattern>      # Search forward for <pattern>
+?<pattern>      # Search backward for <pattern>
+n               # Go to next match
+N               # Go to previous match
+* # Search forward for word under cursor
+#               # Search backward for word under cursor
+
+# 7. Visual Mode:
+v               # Character-wise visual mode
+V               # Line-wise visual mode
+Ctrl+v          # Block-wise visual mode
+# Once in visual mode, use navigation keys to select. Then use
+# d (delete), y (yank/copy), ~ (change case) etc.
+
+# 8. Splits and Tabs:
+:split or :sp   # Create a new horizontal split (current file)
+:vsplit or :vsp # Create a new vertical split (current file)
+Ctrl+w h/j/k/l  # Move between splits
+Ctrl+w w        # Cycle through splits
+Ctrl+w q        # Close current split
+Ctrl+w o        # Close all other splits
+:tabnew         # Create a new empty tab
+gt or :tabnext  # Go to next tab
+gT or :tabprevious # Go to previous tab
+:tabclose       # Close current tab
+
+# --- Plugin-Specific Commands (Common in Lua Setups) ---
+# NOTE: Exact commands and keymaps depend on your specific configuration files
+#       (especially `keymaps.lua` and individual plugin configs).
+
+# 1. LSP (Language Server Protocol) - e.g., nvim-lspconfig:
+gd              # Go to definition (often mapped)
+gr              # Go to references (often mapped)
+gD              # Go to declaration (often mapped)
+K               # Show hover documentation (often mapped)
+<leader>rn      # Rename symbol (mapped to leader + rn)
+:LspInfo        # Show active LSP servers and their status
+:LspStop        # Stop active LSP server for current buffer
+:LspStart       # Start LSP server for current buffer
+:LspRestart     # Restart LSP server for current buffer
+:LspHover       # Explicitly show hover documentation
+:lua vim.lsp.buf.format() # Format code via LSP (often mapped, e.g., to <leader>fm)
+:lua vim.diagnostic.open_float() # Open floating window with diagnostic (error/warning) under cursor
+:lua vim.diagnostic.goto_next() # Go to next diagnostic
+:lua vim.diagnostic.goto_prev() # Go to previous diagnostic
+
+# 2. Fuzzy Finder - e.g., Telescope.nvim (often mapped to <leader>f):
+:Telescope find_files # Find files in current directory
+:Telescope live_grep  # Search text in files (live grep)
+:Telescope buffers    # Fuzzy find open buffers
+:Telescope oldfiles   # Fuzzy find recently opened files
+:Telescope help_tags  # Search Neovim help tags
+:Telescope commands   # Search Neovim commands
+:Telescope keymaps    # Search active keymaps
+
+# 3. File Explorer - e.g., nvim-tree.lua, explorer.lua (check your `keymaps.lua`):
+:NvimTreeToggle # Toggle the file explorer tree
+:NvimTreeOpen   # Open the file explorer
+:NvimTreeClose  # Close the file explorer
+# Inside the tree:
+#   i: toggle hidden files
+#   R: refresh
+#   a: create file/directory
+#   d: delete
+#   r: rename
+#   <CR>: open file/directory
+
+# 4. Commenting - e.g., nvim-comment:
+gcgc            # Toggle comment for current line (often mapped)
+gc<motion>      # Toggle comment for a motion (e.g., gcw to comment word)
+gbc             # Toggle block comment for visual selection
+
+# 5. Git Integration - e.g., fugitive.vim (if installed, not explicitly in your list but common):
+:Git status     # Show git status
+:Git add .      # Git add all files
+:Git commit     # Git commit
+:Git push       # Git push
+:Git blame      # Show git blame for current line
+]c              # (Normal Mode) Go to next hunk
+[c              # (Normal Mode) Go to previous hunk
+<leader>gs      # Often mapped to show git status/diff
+
+# 6. Themes and Appearance:
+:colorscheme <theme_name> # Change the color scheme (e.g., :colorscheme catppuccin)
+# To find available themes, check your `theme.lua` file or the plugin's documentation.
+
+# 7. Plugin Manager - e.g., lazy.nvim (indicated by `lazy-lock.json`):
+:Lazy           # Open the Lazy.nvim UI
+:Lazy sync      # Synchronize plugins (install/update/remove)
+:Lazy clean     # Clean up removed plugins
+:Lazy update    # Update all plugins
+
+# --- Configuration and Troubleshooting ---
+
+# 1. Reloading Configuration:
+:source %       # Reload the current file (useful when editing config files)
+:luafile %      # Reload current Lua file (better for Lua config)
+# Or restart Neovim for full config reload.
+
+# 2. Checking Help:
+:help           # Open Neovim's help documentation
+:help <topic>   # Open help for a specific topic (e.g., :help highlight, :help Cursor)
+:help <plugin_name> # Open help for a specific plugin
+
+# 3. Viewing Options:
+:set <option>?  # Check the current value of an option (e.g., :set cursorline?)
+:set all        # Show all options
+
+# 4. Lua Console:
+:lua            # Enter Lua interactive mode (type Lua code directly)
+:lua print("Hello from Lua!")
+:lua vim.lsp.buf.definition() # Execute a Lua function
+
+# 5. Keymaps:
+:map            # List all normal mode mappings
+:imap           # List all insert mode mappings
+:vmap           # List all visual mode mappings
+:nmap           # List all normal mode mappings
+:xmap           # List all visual block mode mappings
+:cmap           # List all command-line mode mappings
+:verbose map <key> # Show where a keymap is defined (e.g., :verbose map gd)
+
+# 6. Autocommands:
+:autocmd        # List all autocommands
+:autocmd <event> * <command> # Define an autocommand (check `autocmds.lua` for examples)
+
+# --- Useful Normal Mode Keys / Habits ---
+
+# Leader Key:
+#   Many custom keybindings start with a "leader" key.
+#   Check your `keymaps.lua` to see what your leader key is (often <Space> or '\').
+#   Example: <leader>ff (find files), <leader>rn (rename), <leader>gs (git status)
+
+# Text Objects:
+#   These are powerful for selecting/changing blocks of text.
+#   Examples:
+#   diw       # Delete inner word
+#   daw       # Delete a word (includes surrounding space)
+#   cis       # Change inner sentence
+#   ci"       # Change inner double quotes
+#   yap       # Yank around paragraph
+#   daB       # Delete around Block (curly braces)
+
+# Macros:
+#   qa        # Start recording macro to register 'a'
+#   q         # Stop recording
+#   @a        # Play macro 'a'
+#   @@        # Repeat last played macro
+
+# Incremental Search:
+#   /search<CR>   # Start searching. Type n/N to go next/previous.
+#   :set incsearch # Enable incremental search (shows matches as you type)
+
+# Relative Line Numbers:
+#   :set relativenumber # Show relative line numbers (useful for motions like 5j)
+#   :set number         # Show absolute line numbers
+#   :set rnu!           # Toggle relative numbers
+
+# Indentation:
+#   gg=G              # Auto-indent entire file
+
+# Window Resizing:
+#   Ctrl+w +          # Increase window height
+#   Ctrl+w -          # Decrease window height
+#   Ctrl+w >          # Increase window width
+#   Ctrl+w <          # Decrease window width
+#   Ctrl+w =          # Make all splits equal size
+
+# --- Remember to consult your specific configuration files ---
+# - `lua/config/options.lua`: General Neovim options
+# - `lua/config/keymaps.lua`: All your custom keybindings
+# - `lua/plugins/`: Individual plugin configurations
+# - `lazy-lock.json`: Lists your installed plugins and their versions
